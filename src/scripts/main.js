@@ -1,7 +1,8 @@
-import { getPosts, getUsers, getLoggedInUser, usePostCollection } from "./data/DataManager.js";
+import { getPosts, getUsers, getLoggedInUser, usePostCollection, createPost } from "./data/DataManager.js";
 import { PostList } from "./feed/PostList.js";
 import { NavBar } from "./nav/NavBar.js";
 import { Footer } from "./nav/Footer.js";
+import { PostEntry } from "./feed/PostEntry.js"
 
 //  * Main logic module for what should happen on initial page load for Giffygram
 
@@ -55,20 +56,20 @@ applicationElement.addEventListener("click", event => {
 // Alert Message when direct message icon is clicked
 applicationElement.addEventListener("click", event => {
   if (event.target.id === "directMessageIcon") {
-      console.log(`You clicked the button!`)
+    console.log(`You clicked the button!`)
   }
-  }
+}
 )
 
 // Alert Message when Peanut butter icon is clicked
 applicationElement.addEventListener("click", event => {
-if(event.target.id === "homeButton")
-  console.log(`Going home...`)
+  if (event.target.id === "homeButton")
+    console.log(`Going home...`)
 }
 )
 
 applicationElement.addEventListener("click", event => {
-    if(event.target.id.startsWith("edit")) {
+  if (event.target.id.startsWith("edit")) {
     console.log("post clicked", event.target.id.split("--"))
     console.log("the id is", event.target.id.split("--")[1])
   }
@@ -84,10 +85,49 @@ applicationElement.addEventListener("change", event => {
   }
 })
 
+//cancel and submit buttons event listeners. This buttons exist on the form.
+applicationElement.addEventListener("click", event => {
+  if (event.target.id === "newPost__cancel") {   //button id found in PostEntry HTML
+    //clear the input fields
+  }
+})
+
+applicationElement.addEventListener("click", event => {
+  event.preventDefault();                                 //prevents the normal refresh behavior of the browser. Useful for single page apps when form tags are present.
+  if (event.target.id === "newPost__submit") {            //targets the submit button found in PostEntry HTML
+    //collect the input values into an object to post to the DB (database)
+    const title = document.querySelector("input[name='postTitle']").value  /*why are the [] present??*/
+    const url = document.querySelector("input[name='postURL']").value
+    const description = document.querySelector("textarea[name='postDescription']").value
+    //we have not created a user yet - for now, we will hard code `1`.
+    //we can add the current time as well
+    const postObject = {
+      title: title,
+      imageURL: url,
+      description: description,
+      userId: getLoggedInUser().id,
+      timestamp: Date.now()
+    }
+
+    // be sure to import from the DataManager
+    createPost(postObject)
+      .then(response => {
+        showPostList();     //calls the function to grap the new list of posts with newly generated post.
+      })
+  }
+})
+
+//displays the form. Will be called in startGiffyGram() 
+const showPostEntry = () => { 
+  //Get a reference to the location on the DOM where the nav will display
+  const entryElement = document.querySelector(".entryForm");
+  entryElement.innerHTML = PostEntry();
+}
 
 
-  const startGiffyGram = () => {
+const startGiffyGram = () => {
   showNavBar();
+  showPostEntry();
   showPostList();
   showFooter();
 };
