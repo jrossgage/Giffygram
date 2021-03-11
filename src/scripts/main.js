@@ -88,7 +88,7 @@ applicationElement.addEventListener("change", event => {
 //cancel and submit buttons event listeners. This buttons exist on the form.
 applicationElement.addEventListener("click", event => {
   if (event.target.id === "newPost__cancel") {   //button id found in PostEntry HTML
-    //clear the input fields
+    showPostEntry();
   }
 })
 
@@ -112,7 +112,9 @@ applicationElement.addEventListener("click", event => {
     // be sure to import from the DataManager
     createPost(postObject)
       .then(response => {
-        showPostList();     //calls the function to grap the new list of posts with newly generated post.
+        showPostList();    //calls the function to grap the new list of posts with newly generated post.
+        showPostEntry();   //test. resets the form.
+                           
       })
   }
 })
