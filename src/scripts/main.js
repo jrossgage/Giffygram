@@ -10,21 +10,8 @@ import { PostEntry } from "./feed/PostEntry.js"
 const showPostList = () => {
   const postElement = document.querySelector(".postList");
   getPosts().then((allPosts) => {
-    postElement.innerHTML = PostList(allPosts);
+    postElement.innerHTML = PostList(allPosts.reverse());
   })
-}
-//displaying filtered Posts
-const showFilteredPosts = (year) => {
-  //get a copy of the post collection
-  const epoch = Date.parse(`01/01/${year}`);
-  //filter the data
-  const filteredData = usePostCollection().filter(singlePost => {
-    if (singlePost.timestamp >= epoch) {
-      return singlePost
-    }
-  })
-  const postElement = document.querySelector(".postList");
-  postElement.innerHTML = PostList(filteredData);
 }
 
 
@@ -45,13 +32,13 @@ const showFooter = () => {
 // Declaring location in Main and storing in a variable
 const applicationElement = document.querySelector(".giffygram");
 
-
 //add logout event
 applicationElement.addEventListener("click", event => {
   if (event.target.id === "logout") {
     console.log("You clicked on logout")
   }
 })
+
 
 // Alert Message when direct message icon is clicked
 applicationElement.addEventListener("click", event => {
@@ -75,15 +62,33 @@ applicationElement.addEventListener("click", event => {
   }
 })
 
+
+
 //add footer event
 applicationElement.addEventListener("change", event => {
   if (event.target.id === "yearSelection") {
     const yearAsNumber = parseInt(event.target.value)
-
     console.log(`User wants to see posts since ${yearAsNumber}`)
+    //invoke a filter function passing the year as an argument
     showFilteredPosts(yearAsNumber);
   }
 })
+//filter data by year
+const showFilteredPosts = (year) => {     //declaring function. Takes a parameter. 
+  //get a copy of the post collection
+  const epoch = Date.parse(`01/01/${year}`);   //finding the time between the year and the Jan 1, 1970. Storing in a variable
+  //filter the data
+  const filteredData = usePostCollection().filter(singlePost => {    //declaring a function. usePostCollection is from Data manager. Returns a copy of the data state. Filter method is called containing a function within the (). 
+    if (singlePost.timestamp >= epoch) { 
+      return singlePost                             // holds the instructions for the filter. If the timestamp of the singlePost is >= the variable epoch, return single post (filtered post).      return singlePost
+    }
+  })
+  postElement.innerHTML = PostList(filteredData);                   // insert the filtered data in the designated location. 
+}
+const postElement = document.querySelector(".postList");          // select a place on the DOM and store location in a variable.
+
+
+
 
 //cancel and submit buttons event listeners. This buttons exist on the form.
 applicationElement.addEventListener("click", event => {
