@@ -1,60 +1,68 @@
 {
-    "users": [
-        {
-            "id": 1,
-            "name": " B.J.",
-            "email": " bjemail@dot.com"
-        },
-        {
-            "id": 2,
-            "name": "Joel",
-            "email": "joel@dot.com"
-        },
-        {
-            "id": 3,
-            "name": "Steve",
-            "email": "steveemail@dot.com"
-        },
-        {
-            "name": "Fred",
-            "email": "fredemail@dot.com",
-            "id": 4
-        },
-        {
-            "name": "Tim",
-            "email": "timemail@dot.com",
-            "id": 5
-        },
-        {
-            "name": "Sally",
-            "email": "sallyemail@dot.com",
-            "id": 6
-        }
-    ],
-    "posts":[ {
-        "id": 2,
-        "imageURL": "https://media.giphy.com/media/26xBI73gWquCBBCDe/giphy.gif",
-        "userId": 6,
-        "description": "Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.\n\nDuis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.",
-        "timestamp": 1561695022812,
-        "title": "Enhanced global utilisation"
+  "users": [
+    {
+      "id": 1,
+      "name": " B.J.",
+      "email": " bjemail@dot.com"
     },
     {
-        "id": 3,
-        "imageURL": "https://media.giphy.com/media/26xBI73gWquCBBCDe/giphy.gif",
-        "userId": 6,
-        "description": "Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.\n\nDuis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.",
-        "timestamp": 1561695022812,
-        "title": "Enhanced global utilisation 2"
-    }
-],
-"likes": [
+      "id": 2,
+      "name": "Joel",
+      "email": "joel@dot.com"
+    },
     {
-        "id": 1,
-        "userId": 1,
-        "postId": 2
+      "id": 3,
+      "name": "Steve",
+      "email": "steveemail@dot.com"
+    },
+    {
+      "name": "Fred",
+      "email": "fredemail@dot.com",
+      "id": 4
+    },
+    {
+      "name": "Tim",
+      "email": "timemail@dot.com",
+      "id": 5
+    },
+    {
+      "name": "Sally",
+      "email": "sallyemail@dot.com",
+      "id": 6
     }
-],
-
-"messages": []
+  ],
+  "posts": [
+    {
+      "id": 2,
+      "imageURL": "https://media.giphy.com/media/26xBI73gWquCBBCDe/giphy.gif",
+      "userId": 6,
+      "description": "Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.\n\nDuis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.",
+      "timestamp": 1561695022812,
+      "title": "Enhanced global utilisation"
+    },
+    {
+      "id": 3,
+      "imageURL": "https://media.giphy.com/media/26xBI73gWquCBBCDe/giphy.gif",
+      "userId": 6,
+      "description": "Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.\n\nDuis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.",
+      "timestamp": 1561695022812,
+      "title": "Enhanced global utilisation 2"
+    },
+    {
+      "title": "Solved!",
+      "imageURL": "https://media1.giphy.com/media/REsujhxE5IKrAvvW1V/giphy.gif?cid=ecf05e4791b1f0f61cd759f115cafe46a81d2ab2048f83bb&rid=giphy.gif",
+      "description": "Here it is working.",
+      "userId": 1,
+      "timestamp": 1615481750821,
+      "id": 4
+    }
+  ],
+  "likes": [
+    {
+      "id": 1,
+      "userId": 1,
+      "postId": 2
+    }
+  ],
+  "messages": []
 }
