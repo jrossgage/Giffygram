@@ -5,7 +5,7 @@ A website allowing for the catalogging of .gifs. These gifs may be saved to a li
 This site utilizes html, css styling, and javascript modules. Within the javascript is also event listener functionality. 
 
 ## How to Access
-This website is not currently live. To access, pull the code from gitHub and serve locally. When accessing your terminal, navigate to the /src directory. Once inside the src directory, issue the serve command. To iniate the json server, navigate to the api directory and issue the command, json-server -p 8088 -w giffygram.json. When both the json server and the site itself are being served, the site will be functional. 
+This website is not currently live. To access, pull the code from gitHub and serve locally. Pulling from gitHub requires a git clone of the repository. Find the link to the code within gitHub. To serve the site, when accessing your terminal, navigate to the /src directory. Once inside the src directory, issue the serve command. To iniate the json server, navigate to the api directory and issue the command, json-server -p 8088 -w giffygram.json. When both the json server and the site itself are being served, the site will be functional. 
 
 
 ## How to Use
