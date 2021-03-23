@@ -3,9 +3,10 @@ import { PostList } from "./feed/PostList.js";
 import { NavBar } from "./nav/NavBar.js";
 import { Footer } from "./nav/Footer.js";
 import { PostEntry } from "./feed/PostEntry.js"
+import { deletePost } from "./data/DataManager.js"
 
 //  * Main logic module for what should happen on initial page load for Giffygram
-
+console.log("Main is Loaded");
 // Displaying Posts
 const showPostList = () => {
   const postElement = document.querySelector(".postList");
@@ -55,6 +56,7 @@ applicationElement.addEventListener("click", event => {
 }
 )
 
+//edit button listener
 applicationElement.addEventListener("click", event => {
   if (event.target.id.startsWith("edit")) {
     console.log("post clicked", event.target.id.split("--"))
@@ -62,6 +64,16 @@ applicationElement.addEventListener("click", event => {
   }
 })
 
+   //delete button event listener
+   applicationElement.addEventListener("click", event => {
+    if (event.target.id.startsWith("delete")) {
+      const postId = event.target.id.split("__")[1];
+    deletePost(postId)
+      .then(response => {
+        showPostList();
+      })
+}
+})
 
 
 //add footer event
@@ -85,9 +97,8 @@ const showFilteredPosts = (year) => {     //declaring function. Takes a paramete
   })
   postElement.innerHTML = PostList(filteredData);                   // insert the filtered data in the designated location. 
 }
+
 const postElement = document.querySelector(".postList");          // select a place on the DOM and store location in a variable.
-
-
 
 
 //cancel and submit buttons event listeners. This buttons exist on the form.
@@ -119,7 +130,6 @@ applicationElement.addEventListener("click", event => {
       .then(response => {
         showPostList();    //calls the function to grap the new list of posts with newly generated post.
         showPostEntry();   //test. resets the form.
-                           
       })
   }
 })

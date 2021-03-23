@@ -29,6 +29,7 @@ export const getPosts = () => {
     })
 }
 
+//creating a post
 export const createPost = postObj => {
     return fetch("http://localhost:8088/posts", {   //object full of details saying how to handle the info
         method: "POST",                             //must be capitalized. Says to post new idea to the database. Think postman app.
@@ -51,3 +52,15 @@ export const getLoggedInUser = () => {
 	return {...loggedInUser};
 }
 
+//deleting a post
+export const deletePost = postId => {
+    return fetch(`http://localhost:8088/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+  
+    })
+        .then(response => response.json())
+        .then(getPosts)
+  }
