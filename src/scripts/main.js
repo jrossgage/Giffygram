@@ -1,5 +1,5 @@
 import { getPosts, getUsers, getLoggedInUser, usePostCollection, createPost, getSinglePost, 
-  updatePost, logoutUser, deletePost, setLoggedInUser, loginUser, registerUser } from "./data/DataManager.js";
+  updatePost, logoutUser, deletePost, setLoggedInUser, loginUser, registerUser, getfilterUserPosts } from "./data/DataManager.js";
 import { PostList } from "./feed/PostList.js";
 import { NavBar } from "./nav/NavBar.js";
 import { Footer } from "./nav/Footer.js";
@@ -18,6 +18,14 @@ const showPostList = () => {
     postElement.innerHTML = PostList(allPosts.reverse());
   })
 }
+
+const showFilteredUserPosts = () => {
+  const postElement = document.querySelector(".postList");
+  getfilterUserPosts().then((allPosts) => {
+    postElement.innerHTML = PostList(allPosts.reverse());
+  })
+}
+
 
 
 // Displaying NavBar
@@ -72,7 +80,7 @@ applicationElement.addEventListener("click", event => {
   }
 })
 
-
+//Register button
 applicationElement.addEventListener("click", event => {
   event.preventDefault();
   if (event.target.id === "register__submit") {
@@ -159,6 +167,16 @@ const showFilteredPosts = (year) => {     //declaring function. Takes a paramete
 }
 
 const postElement = document.querySelector(".postList");          // select a place on the DOM and store location in a variable.
+
+//filter data by user posts event listener
+applicationElement.addEventListener("click", event => {  
+  if (event.target.id === "userPostsOnly") {
+    getfilterUserPosts().then(() => {
+      showFilteredUserPosts()}
+      )}
+}
+)
+
 
 
 //cancel and submit buttons event listeners. This buttons exist on the form.

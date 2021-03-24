@@ -19,6 +19,19 @@ export const usePostCollection = () => {
     return [...postCollection];
   }
 
+  export const getPosts = () => {
+    const userId = getLoggedInUser().id
+    return fetch(`http://localhost:8088/posts?_expand=user`)
+      .then(response => response.json())
+      .then(parsedResponse => {
+        console.log("data with user", parsedResponse)
+        postCollection = parsedResponse
+        return parsedResponse;
+      })
+  }
+
+
+
 //creating a post
 export const createPost = postObj => {
     return fetch("http://localhost:8088/posts", {   //object full of details saying how to handle the info
@@ -32,9 +45,10 @@ export const createPost = postObj => {
         .then(response => response.json())          //converts the response back into a json format.
   }
 
+//change declaration to let
 let loggedInUser = {}
-
-export const logoutUser = () => {
+  
+  export const logoutUser = () => {
     loggedInUser = {}
   }
 
@@ -46,9 +60,8 @@ export const setLoggedInUser = (userObj) => {
     loggedInUser = userObj;
   }
 
-  //accepts object from login form. Applies those key values into the url.
   export const loginUser = (userObj) => {
-    return fetch(`http://localhost:8088/users?name=${userObj.name}&email=${userObj.email}`)   //utilizes json code to grab the right info.
+    return fetch(`http://localhost:8088/users?name=${userObj.name}&email=${userObj.email}`)
     .then(response => response.json())
     .then(parsedUser => {
       //is there a user?
@@ -63,7 +76,6 @@ export const setLoggedInUser = (userObj) => {
     })
   }
 
-  //register a new user
   export const registerUser = (userObj) => {
     return fetch(`http://localhost:8088/users`, {
       method: "POST",
@@ -79,18 +91,6 @@ export const setLoggedInUser = (userObj) => {
     })
   }
 
-  export const getPosts = () => {
-    // const userId = getLoggedInUser().id
-    return fetch(`http://localhost:8088/posts?_expand=user`)
-      .then(response => response.json())
-      .then(parsedResponse => {
-        console.log("data with user", parsedResponse)
-        postCollection = parsedResponse
-        return parsedResponse;
-      })
-  }
-
-
 //deleting a post
 export const deletePost = postId => {
     return fetch(`http://localhost:8088/posts/${postId}`, {
@@ -102,11 +102,6 @@ export const deletePost = postId => {
     })
         .then(response => response.json())
         .then(getPosts)
-  }
-
-  export const getSinglePost = (postId) => {
-    return fetch(`http://localhost:8088/posts/${postId}`)
-      .then(response => response.json())
   }
 
   export const updatePost = postObj => {
@@ -121,3 +116,19 @@ export const deletePost = postId => {
         .then(response => response.json())
         .then(getPosts)
   }
+
+  export const getSinglePost = (postId) => {
+    return fetch(`http://localhost:8088/posts/${postId}`)
+      .then(response => response.json())
+  }
+
+  //filter data by user posts
+ export const getfilterUserPosts = () => {
+      const userId= getLoggedInUser().id
+    return fetch(`http://localhost:8088/posts?userId=${userId}&_expand=user`)
+    .then(response => response.json())
+    .then(parsedResponse => {
+        postCollection = parsedResponse
+        return parsedResponse;
+    })
+}
