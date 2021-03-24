@@ -13,6 +13,9 @@ export const Footer = () => {
                 </select>
                 <span id="postCount">0</span>
             </div>
+            <div>
+            <button id="userPostsOnly">See My Posts</button>
+            <div>
         </footer>
     `
 }

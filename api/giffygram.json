@@ -2,8 +2,8 @@
   "users": [
     {
       "id": 1,
-      "name": " B.J.",
-      "email": " bjemail@dot.com"
+      "name": "B.J.",
+      "email": "bjemail@dot.com"
     },
     {
       "id": 2,
@@ -29,6 +29,16 @@
       "name": "Sally",
       "email": "sallyemail@dot.com",
       "id": 6
+    },
+    {
+      "name": "fred",
+      "email": "fredemail.com",
+      "id": 7
+    },
+    {
+      "name": "Joel",
+      "email": "joel@joel.com",
+      "id": 8
     }
   ],
   "posts": [
@@ -39,6 +49,14 @@
       "userId": 1,
       "timestamp": 1616526296053,
       "id": 1
+    },
+    {
+      "title": "This is Joel's Post",
+      "imageURL": "https://media2.giphy.com/media/e6sSPMUFORZEF6VD7D/giphy.gif?cid=ecf05e47fdc6bda18918fb8c050048085572bb5e80b8af3a&rid=giphy.gif",
+      "description": "A post from Joel",
+      "userId": 8,
+      "timestamp": 1616610276422,
+      "id": 2
     }
   ],
   "likes": [],
