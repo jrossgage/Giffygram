@@ -1,13 +1,16 @@
-import { getPosts, getUsers, getLoggedInUser, usePostCollection, createPost, getSinglePost, updatePost } from "./data/DataManager.js";
+import { getPosts, getUsers, getLoggedInUser, usePostCollection, createPost, getSinglePost, 
+  updatePost, logoutUser, deletePost, setLoggedInUser, loginUser, registerUser } from "./data/DataManager.js";
 import { PostList } from "./feed/PostList.js";
 import { NavBar } from "./nav/NavBar.js";
 import { Footer } from "./nav/Footer.js";
 import { PostEntry } from "./feed/PostEntry.js"
-import { deletePost } from "./data/DataManager.js"
 import { PostEdit } from "./feed/PostEdit.js"
+import { LoginForm } from "./auth/LoginForm.js"
+import { RegisterForm } from "./auth/RegisterForm.js"
 
 //  * Main logic module for what should happen on initial page load for Giffygram
 console.log("Main is Loaded");
+console.log(JSON.parse(sessionStorage.getItem("user")).name); 
 // Displaying Posts
 const showPostList = () => {
   const postElement = document.querySelector(".postList");
@@ -37,12 +40,13 @@ const applicationElement = document.querySelector(".giffygram");
 //add logout event
 applicationElement.addEventListener("click", event => {
   if (event.target.id === "logout") {
-    console.log("You clicked on logout")
+    logoutUser();
+    sessionStorage.clear();
+    checkForUser();
   }
 })
 
-
-// Alert Message when direct message icon is clicked
+// Alert Message when direct message icon is clicked (not functional yet)
 applicationElement.addEventListener("click", event => {
   if (event.target.id === "directMessageIcon") {
     console.log(`You clicked the button!`)
@@ -50,7 +54,7 @@ applicationElement.addEventListener("click", event => {
 }
 )
 
-// Alert Message when Peanut butter icon is clicked
+// Alert Message when Peanut butter icon is clicked (not functional yet)
 applicationElement.addEventListener("click", event => {
   if (event.target.id === "homeButton")
     console.log(`Going home...`)
@@ -59,12 +63,29 @@ applicationElement.addEventListener("click", event => {
 
 //edit button listener
 applicationElement.addEventListener("click", event => {
-  if (event.target.id.startsWith("edit")){
-    const postId = event.target.id.split("__")[1];
-    getSinglePost(postId)
-      .then(response => {
+  if (event.target.id.startsWith("edit")){              //startsWith checks what the id starts with rather than complete word
+    const postId = event.target.id.split("__")[1];      //.split creates an array. Here we are targeting index of 1 which is the interpolated post object id.
+    getSinglePost(postId)                       //calling getSinglePost on the postObj id
+      .then(response => {                   //grabbing that response and then using it as an argument in showEdit.
         showEdit(response);
       })
+  }
+})
+
+
+applicationElement.addEventListener("click", event => {
+  event.preventDefault();
+  if (event.target.id === "register__submit") {
+    //collect all the details into an object
+    const userObject = {
+      name: document.querySelector("input[name='registerName']").value,
+      email: document.querySelector("input[name='registerEmail']").value
+    }
+    registerUser(userObject)
+    .then(dbUserObj => {
+      sessionStorage.setItem("user", JSON.stringify(dbUserObj));
+      startGiffyGram();
+    })
   }
 })
 
@@ -73,18 +94,18 @@ const showEdit = (postObj) => {
   entryElement.innerHTML = PostEdit(postObj);
 }
 
-//Update Button
+//Update Button available once edit has begun. Similar process as the edit button and save button in targetting the correct post
 applicationElement.addEventListener("click", event => {
   event.preventDefault();
   if (event.target.id.startsWith("updatePost")) {
     const postId = event.target.id.split("__")[1];
     //collect all the details into an object
-    const title = document.querySelector("input[name='postTitle']").value
+    const title = document.querySelector("input[name='postTitle']").value  //Why is the [] there?
     const url = document.querySelector("input[name='postURL']").value
     const description = document.querySelector("textarea[name='postDescription']").value
     const timestamp = document.querySelector("input[name='postTime']").value
     
-    const postObject = {
+    const postObject = {      //creats a post object to be saved to the json
       title: title,
       imageURL: url,
       description: description,
@@ -94,7 +115,7 @@ applicationElement.addEventListener("click", event => {
     }
     
     showPostEntry();
-    
+
     updatePost(postObject)
       .then(response => {
         
@@ -154,7 +175,7 @@ applicationElement.addEventListener("click", event => {
     const title = document.querySelector("input[name='postTitle']").value  /*why are the [] present??*/
     const url = document.querySelector("input[name='postURL']").value
     const description = document.querySelector("textarea[name='postDescription']").value
-    //we have not created a user yet - for now, we will hard code `1`.
+    
     //we can add the current time as well
     const postObject = {
       title: title,
@@ -163,6 +184,23 @@ applicationElement.addEventListener("click", event => {
       userId: getLoggedInUser().id,
       timestamp: Date.now()
     }
+
+    //register event listener
+    applicationElement.addEventListener("click", event => {
+      event.preventDefault();
+      if (event.target.id === "register__submit") {
+        //collect all the details into an object
+        const userObject = {
+          name: document.querySelector("input[name='registerName']").value,
+          email: document.querySelector("input[name='registerEmail']").value
+        }
+        registerUser(userObject)
+        .then(dbUserObj => {
+          sessionStorage.setItem("user", JSON.stringify(dbUserObj));  //moving from object into string to place into the session storage. This allows the user to be logged in after registering.
+          startGiffyGram();
+        })
+      }
+    })
 
     // be sure to import from the DataManager
     createPost(postObject)
@@ -180,6 +218,49 @@ const showPostEntry = () => {
   entryElement.innerHTML = PostEntry();
 }
 
+//Looks to the session storage to find the current logged in user.
+const checkForUser = () => {
+  if (sessionStorage.getItem("user")){        //if user exists
+	  setLoggedInUser(JSON.parse(sessionStorage.getItem("user")));    //set the logged in user as an object parsed from a string. Here its string -> object.
+    startGiffyGram();                 
+  }else {
+    showLoginRegister();        //calls a function that displays a login form
+  }
+}
+
+//login form function
+const showLoginRegister = () => {
+  showNavBar();
+  const entryElement = document.querySelector(".entryForm");
+  //template strings can be used here too
+  entryElement.innerHTML = `${LoginForm()} <hr/> <hr/> ${RegisterForm()}`;  //hr= horizontal rule. Interpolates functions that carry 'cards'.
+  //make sure the post list is cleared out too
+const postElement = document.querySelector(".postList");
+postElement.innerHTML = "";
+}
+
+//Login submit button
+applicationElement.addEventListener("click", event => {
+  event.preventDefault();
+  if (event.target.id === "login__submit") {
+    //collect all the details into an object
+    const userObject = {
+      name: document.querySelector("input[name='name']").value,   //similar process to line 102-113 but is not setting variables.
+      email: document.querySelector("input[name='email']").value
+    }
+    loginUser(userObject)               //passes object variable to loginUser
+    .then(dbUserObj => {
+      if(dbUserObj){
+        sessionStorage.setItem("user", JSON.stringify(dbUserObj));
+        startGiffyGram();
+      }else {
+        //got a false value - no user
+        const entryElement = document.querySelector(".entryForm");
+        entryElement.innerHTML = `<p class="center">That user does not exist. Please try again or register for your free account.</p> ${LoginForm()} <hr/> <hr/> ${RegisterForm()}`;
+      }
+    })
+  }
+})
 
 const startGiffyGram = () => {
   showNavBar();
@@ -189,4 +270,4 @@ const startGiffyGram = () => {
 };
 
 
-startGiffyGram();
+checkForUser();
