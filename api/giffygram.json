@@ -59,6 +59,27 @@
       "id": 2
     }
   ],
-  "likes": [],
+  "userLikes": [
+    {
+      "postId": "2",
+      "userId": 1,
+      "id": 1
+    },
+    {
+      "postId": "1",
+      "userId": 1,
+      "id": 2
+    },
+    {
+      "postId": "2",
+      "userId": 1,
+      "id": 3
+    },
+    {
+      "postId": "1",
+      "userId": 1,
+      "id": 4
+    }
+  ],
   "messages": []
 }

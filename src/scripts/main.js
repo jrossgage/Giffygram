@@ -1,5 +1,5 @@
 import { getPosts, getUsers, getLoggedInUser, usePostCollection, createPost, getSinglePost, 
-  updatePost, logoutUser, deletePost, setLoggedInUser, loginUser, registerUser, getfilterUserPosts } from "./data/DataManager.js";
+  updatePost, logoutUser, deletePost, setLoggedInUser, loginUser, registerUser, getfilterUserPosts, postLike } from "./data/DataManager.js";
 import { PostList } from "./feed/PostList.js";
 import { NavBar } from "./nav/NavBar.js";
 import { Footer } from "./nav/Footer.js";
@@ -10,7 +10,6 @@ import { RegisterForm } from "./auth/RegisterForm.js"
 
 //  * Main logic module for what should happen on initial page load for Giffygram
 console.log("Main is Loaded");
-console.log(JSON.parse(sessionStorage.getItem("user")).name); 
 // Displaying Posts
 const showPostList = () => {
   const postElement = document.querySelector(".postList");
@@ -279,6 +278,21 @@ applicationElement.addEventListener("click", event => {
     })
   }
 })
+
+//Like button 
+applicationElement.addEventListener("click", event => {
+	event.preventDefault();
+	if (event.target.id.startsWith("like")) {
+	  const likeObject = {
+		 postId: event.target.id.split("__")[1],
+		 userId: getLoggedInUser().id
+	  }
+	  postLike(likeObject)
+		.then(response => {
+		  showPostList();
+		})
+	}
+  })
 
 const startGiffyGram = () => {
   showNavBar();
