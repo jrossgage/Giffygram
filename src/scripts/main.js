@@ -1,5 +1,8 @@
-import { getPosts, getUsers, getLoggedInUser, usePostCollection, createPost, getSinglePost, 
-  updatePost, logoutUser, deletePost, setLoggedInUser, loginUser, registerUser, getfilterUserPosts, postLike } from "./data/DataManager.js";
+import {
+  getPosts, getUsers, getLoggedInUser, usePostCollection, createPost, getSinglePost,
+  updatePost, logoutUser, deletePost, setLoggedInUser, loginUser, registerUser, getfilterUserPosts, postLike, getDadJoke
+} from "./data/DataManager.js";
+import { Joke } from "./feed/Joke.js";
 import { PostList } from "./feed/PostList.js";
 import { NavBar } from "./nav/NavBar.js";
 import { Footer } from "./nav/Footer.js";
@@ -23,6 +26,14 @@ const showFilteredUserPosts = () => {
   getfilterUserPosts().then((allPosts) => {
     postElement.innerHTML = PostList(allPosts.reverse());
   })
+}
+
+const showDadJoke = () => {
+  const jokeElement = document.querySelector(".joke")
+  getDadJoke().then((joke) => {
+    jokeElement.innerHTML = Joke(joke);
+  }
+  )
 }
 
 
@@ -70,7 +81,7 @@ applicationElement.addEventListener("click", event => {
 
 //edit button listener
 applicationElement.addEventListener("click", event => {
-  if (event.target.id.startsWith("edit")){              //startsWith checks what the id starts with rather than complete word
+  if (event.target.id.startsWith("edit")) {              //startsWith checks what the id starts with rather than complete word
     const postId = event.target.id.split("__")[1];      //.split creates an array. Here we are targeting index of 1 which is the interpolated post object id.
     getSinglePost(postId)                       //calling getSinglePost on the postObj id
       .then(response => {                   //grabbing that response and then using it as an argument in showEdit.
@@ -89,10 +100,10 @@ applicationElement.addEventListener("click", event => {
       email: document.querySelector("input[name='registerEmail']").value
     }
     registerUser(userObject)
-    .then(dbUserObj => {
-      sessionStorage.setItem("user", JSON.stringify(dbUserObj));
-      startGiffyGram();
-    })
+      .then(dbUserObj => {
+        sessionStorage.setItem("user", JSON.stringify(dbUserObj));
+        startGiffyGram();
+      })
   }
 })
 
@@ -111,7 +122,7 @@ applicationElement.addEventListener("click", event => {
     const url = document.querySelector("input[name='postURL']").value
     const description = document.querySelector("textarea[name='postDescription']").value
     const timestamp = document.querySelector("input[name='postTime']").value
-    
+
     const postObject = {      //creats a post object to be saved to the json
       title: title,
       imageURL: url,
@@ -120,26 +131,26 @@ applicationElement.addEventListener("click", event => {
       timestamp: parseInt(timestamp),
       id: parseInt(postId)
     }
-    
+
     showPostEntry();
 
     updatePost(postObject)
       .then(response => {
-        
+
         showPostList();
       })
   }
 })
 
-   //delete button event listener
-   applicationElement.addEventListener("click", event => {
-    if (event.target.id.startsWith("delete")) {
-      const postId = event.target.id.split("__")[1];
+//delete button event listener
+applicationElement.addEventListener("click", event => {
+  if (event.target.id.startsWith("delete")) {
+    const postId = event.target.id.split("__")[1];
     deletePost(postId)
       .then(response => {
         showPostList();
       })
-}
+  }
 })
 
 
@@ -158,7 +169,7 @@ const showFilteredPosts = (year) => {     //declaring function. Takes a paramete
   const epoch = Date.parse(`01/01/${year}`);   //finding the time between the year and the Jan 1, 1970. Storing in a variable
   //filter the data
   const filteredData = usePostCollection().filter(singlePost => {    //declaring a function. usePostCollection is from Data manager. Returns a copy of the data state. Filter method is called containing a function within the (). 
-    if (singlePost.timestamp >= epoch) { 
+    if (singlePost.timestamp >= epoch) {
       return singlePost                             // holds the instructions for the filter. If the timestamp of the singlePost is >= the variable epoch, return single post (filtered post).      return singlePost
     }
   })
@@ -168,11 +179,13 @@ const showFilteredPosts = (year) => {     //declaring function. Takes a paramete
 const postElement = document.querySelector(".postList");          // select a place on the DOM and store location in a variable.
 
 //filter data by user posts event listener
-applicationElement.addEventListener("click", event => {  
+applicationElement.addEventListener("click", event => {
   if (event.target.id === "userPostsOnly") {
     getfilterUserPosts().then(() => {
-      showFilteredUserPosts()}
-      )}
+      showFilteredUserPosts()
+    }
+    )
+  }
 }
 )
 
@@ -192,7 +205,7 @@ applicationElement.addEventListener("click", event => {
     const title = document.querySelector("input[name='postTitle']").value  /*why are the [] present??*/
     const url = document.querySelector("input[name='postURL']").value
     const description = document.querySelector("textarea[name='postDescription']").value
-    
+
     //we can add the current time as well
     const postObject = {
       title: title,
@@ -212,10 +225,10 @@ applicationElement.addEventListener("click", event => {
           email: document.querySelector("input[name='registerEmail']").value
         }
         registerUser(userObject)
-        .then(dbUserObj => {
-          sessionStorage.setItem("user", JSON.stringify(dbUserObj));  //moving from object into string to place into the session storage. This allows the user to be logged in after registering.
-          startGiffyGram();
-        })
+          .then(dbUserObj => {
+            sessionStorage.setItem("user", JSON.stringify(dbUserObj));  //moving from object into string to place into the session storage. This allows the user to be logged in after registering.
+            startGiffyGram();
+          })
       }
     })
 
@@ -229,7 +242,7 @@ applicationElement.addEventListener("click", event => {
 })
 
 //displays the form. Will be called in startGiffyGram() 
-const showPostEntry = () => { 
+const showPostEntry = () => {
   //Get a reference to the location on the DOM where the nav will display
   const entryElement = document.querySelector(".entryForm");
   entryElement.innerHTML = PostEntry();
@@ -237,10 +250,10 @@ const showPostEntry = () => {
 
 //Looks to the session storage to find the current logged in user.
 const checkForUser = () => {
-  if (sessionStorage.getItem("user")){        //if user exists
-	  setLoggedInUser(JSON.parse(sessionStorage.getItem("user")));    //set the logged in user as an object parsed from a string. Here its string -> object.
-    startGiffyGram();                 
-  }else {
+  if (sessionStorage.getItem("user")) {        //if user exists
+    setLoggedInUser(JSON.parse(sessionStorage.getItem("user")));    //set the logged in user as an object parsed from a string. Here its string -> object.
+    startGiffyGram();
+  } else {
     showLoginRegister();        //calls a function that displays a login form
   }
 }
@@ -252,8 +265,8 @@ const showLoginRegister = () => {
   //template strings can be used here too
   entryElement.innerHTML = `${LoginForm()} <hr/> <hr/> ${RegisterForm()}`;  //hr= horizontal rule. Interpolates functions that carry 'cards'.
   //make sure the post list is cleared out too
-const postElement = document.querySelector(".postList");
-postElement.innerHTML = "";
+  const postElement = document.querySelector(".postList");
+  postElement.innerHTML = "";
 }
 
 //Login submit button
@@ -266,39 +279,40 @@ applicationElement.addEventListener("click", event => {
       email: document.querySelector("input[name='email']").value
     }
     loginUser(userObject)               //passes object variable to loginUser
-    .then(dbUserObj => {
-      if(dbUserObj){
-        sessionStorage.setItem("user", JSON.stringify(dbUserObj));
-        startGiffyGram();
-      }else {
-        //got a false value - no user
-        const entryElement = document.querySelector(".entryForm");
-        entryElement.innerHTML = `<p class="center">That user does not exist. Please try again or register for your free account.</p> ${LoginForm()} <hr/> <hr/> ${RegisterForm()}`;
-      }
-    })
+      .then(dbUserObj => {
+        if (dbUserObj) {
+          sessionStorage.setItem("user", JSON.stringify(dbUserObj));
+          startGiffyGram();
+        } else {
+          //got a false value - no user
+          const entryElement = document.querySelector(".entryForm");
+          entryElement.innerHTML = `<p class="center">That user does not exist. Please try again or register for your free account.</p> ${LoginForm()} <hr/> <hr/> ${RegisterForm()}`;
+        }
+      })
   }
 })
 
 //Like button 
 applicationElement.addEventListener("click", event => {
-	event.preventDefault();
-	if (event.target.id.startsWith("like")) {
-	  const likeObject = {
-		 postId: event.target.id.split("__")[1],
-		 userId: getLoggedInUser().id
-	  }
-	  postLike(likeObject)
-		.then(response => {
-		  showPostList();
-		})
-	}
-  })
+  event.preventDefault();
+  if (event.target.id.startsWith("like")) {
+    const likeObject = {
+      postId: event.target.id.split("__")[1],
+      userId: getLoggedInUser().id
+    }
+    postLike(likeObject)
+      .then(response => {
+        showPostList();
+      })
+  }
+})
 
 const startGiffyGram = () => {
   showNavBar();
   showPostEntry();
   showPostList();
   showFooter();
+  showDadJoke();
 };
 
 
