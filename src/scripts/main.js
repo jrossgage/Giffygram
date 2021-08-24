@@ -13,6 +13,7 @@ import { RegisterForm } from "./auth/RegisterForm.js"
 
 //  * Main logic module for what should happen on initial page load for Giffygram
 console.log("Main is Loaded");
+
 // Displaying Posts
 const showPostList = () => {
   const postElement = document.querySelector(".postList");
@@ -36,8 +37,6 @@ const showDadJoke = () => {
   )
 }
 
-
-
 // Displaying NavBar
 const showNavBar = () => {
   //Get a reference to the location on the DOM where the nav will display
@@ -52,9 +51,16 @@ const showFooter = () => {
   footerElement.innerHTML = Footer();
 
 }
+//Event Listeners
 // Declaring location in Main and storing in a variable
 const applicationElement = document.querySelector(".giffygram");
 
+//add button to received new dad joke
+applicationElement.addEventListener("click", event => {
+  if (event.target.id === "newjoke") {
+    showDadJoke();
+  }
+})
 //add logout event
 applicationElement.addEventListener("click", event => {
   if (event.target.id === "logout") {
@@ -82,7 +88,7 @@ applicationElement.addEventListener("click", event => {
 //edit button listener
 applicationElement.addEventListener("click", event => {
   if (event.target.id.startsWith("edit")) {              //startsWith checks what the id starts with rather than complete word
-    const postId = event.target.id.split("__")[1];      //.split creates an array. Here we are targeting index of 1 which is the interpolated post object id.
+    const postId = event.target.id.split("--")[1];      //.split creates an array. Here we are targeting index of 1 which is the interpolated post object id.
     getSinglePost(postId)                       //calling getSinglePost on the postObj id
       .then(response => {                   //grabbing that response and then using it as an argument in showEdit.
         showEdit(response);
